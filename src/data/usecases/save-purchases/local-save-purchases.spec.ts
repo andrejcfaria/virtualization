@@ -26,7 +26,7 @@ const {sut, cacheStore} = makeSut()
 
   test("Should not insert new cache if delete fails",  () => {
     const {sut, cacheStore} = makeSut()
-    jest.spyOn(cacheStore, 'delete').mockImplementationOnce(() => {throw new Error()})
+    cacheStore.simulateDeleteError()
     const purchases = mockPurchases()
     const promise = sut.save(purchases);
     expect(cacheStore.insertCallsCount).toBe(0);
@@ -52,6 +52,14 @@ const {sut, cacheStore} = makeSut()
     expect(cacheStore.InsertValues).toEqual(purchases)
   })
 
+    test("Should throw if insert throw",  () => {
+    const {sut, cacheStore} = makeSut()
+    cacheStore.simulateInsertError()
+    const purchases = mockPurchases()
+    const promise = sut.save(purchases);
+    expect(promise).rejects.toThrow();
+  })
+
 
  })
 
@@ -74,7 +82,16 @@ const {sut, cacheStore} = makeSut()
     this.insertKey = key
     this.InsertValues = value;
 }
-  }
+
+
+simulateDeleteError () : void {
+     jest.spyOn(CacheStoreSpy.prototype, 'delete').mockImplementationOnce(() => {throw new Error()})
+}
+
+simulateInsertError () : void
+ {
+  jest.spyOn(CacheStoreSpy.prototype, 'insert').mockImplementationOnce(()=>{throw new Error()})
+ }  }
 
 type SutTypes = {
   sut : LocalSavePurchases,
