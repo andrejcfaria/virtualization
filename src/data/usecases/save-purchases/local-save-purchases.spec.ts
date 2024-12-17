@@ -1,5 +1,7 @@
+import { Insert } from './../../../../node_modules/@sinclair/typebox/value/delta.d';
 import { CacheStore } from "@/data/protocols/cache";
 import { LocalSavePurchases } from "./local-save-purcahses";
+import {  SavePurchasesParams } from "@/domain/usecases/save-purchases";
 
 
 describe('LocalSave', () => {
@@ -9,35 +11,48 @@ const { cacheStore} = makeSut()
   })
   test("Should  delete old cache on save",async () => {
 const {sut, cacheStore} = makeSut()
-    await  sut.save();
+    const purchases = mockPurchases()
+
+    await  sut.save(purchases);
     expect(cacheStore.deleteCallsCount).toBe(1);
   })
   test("Should call  delete with correct key",async () => {
     const {sut, cacheStore} = makeSut()
-    await  sut.save();
+    const purchases = mockPurchases()
+
+    await  sut.save(purchases);
     expect(cacheStore.deleteKey).toBe("purchases");
   })
 
   test("Should not insert new cache if delete fails",  () => {
     const {sut, cacheStore} = makeSut()
     jest.spyOn(cacheStore, 'delete').mockImplementationOnce(() => {throw new Error()})
-    const promise = sut.save();
+    const purchases = mockPurchases()
+    const promise = sut.save(purchases);
     expect(cacheStore.insertCallsCount).toBe(0);
     expect(promise).rejects.toThrow();
   })
 
   test("Should not insert new cache if delete fails",  async () => {
     const {sut, cacheStore} = makeSut()
-    await sut.save();
+    const purchases = mockPurchases()
+
+    await sut.save(purchases);
     expect(cacheStore.deleteCallsCount).toBe(1);
     expect(cacheStore.insertCallsCount).toBe(1);
   })
-  test("Should call  insert with correct key",  async () => {
-    const {sut, cacheStore} = makeSut()
-    await sut.save();
+
+  test("Should insertnew Cache if delete succeeds",  async () => {
+    const {sut, cacheStore} = makeSut();
+    const purchases = mockPurchases()
+    await sut.save(purchases);
+    expect(cacheStore.deleteCallsCount).toBe(1);
     expect(cacheStore.insertCallsCount).toBe(1);
     expect(cacheStore.insertKey).toBe("purchases");
+    expect(cacheStore.InsertValues).toEqual(purchases)
   })
+
+
  })
 
 
@@ -46,6 +61,7 @@ const {sut, cacheStore} = makeSut()
   insertCallsCount = 0
   deleteKey:string = ""
   insertKey:string = ""
+  InsertValues : Array<SavePurchasesParams> = []
 
   delete (key:string) :void {
     this.deleteCallsCount++
@@ -53,9 +69,10 @@ const {sut, cacheStore} = makeSut()
   }
 
 
-  insert (key:string) : void {
+  insert (key:string, value: any) : void {
     this.insertCallsCount++
     this.insertKey = key
+    this.InsertValues = value;
 }
   }
 
@@ -71,3 +88,14 @@ type SutTypes = {
     cacheStore, sut
   }
  }
+
+ const mockPurchases = () : Array<SavePurchasesParams> => [{
+  id: '1',
+  date: new Date(),
+  value: 50
+ },
+{
+  id: '2',
+  date: new Date(),
+  value: 510
+ }]
