@@ -1,3 +1,7 @@
+import { CacheStore } from "@/data/protocols/cache";
+import { LocalSavePurchases } from "./local-save-purcahses";
+
+
 describe('LocalSave', () => {
   test("Should not delete cache on init", () => {
 const { cacheStore} = makeSut()
@@ -16,19 +20,9 @@ const {sut, cacheStore} = makeSut()
  })
 
 
- class LocalSavePurchases {
-  constructor(private readonly cacheStore:CacheStore) {}
-
-  async save ():Promise<void> {
-    this.cacheStore.delete("purchases");
-  }
- }
 
 
 
-  interface CacheStore {
-    delete :(key:string)=>void;
- }
 
   class CacheStoreSpy implements CacheStore {
   deleteCallsCount = 0
