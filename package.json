@@ -5,6 +5,9 @@
   "repository": "git@github.com-exo:andrejcfaria/virtualization.git",
   "author": "andre faria <fariaoandre@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "test": "jest --no-cache --watchAll"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.2",
