@@ -1,0 +1,12 @@
+{
+  "name": "virtualization",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com-exo:andrejcfaria/virtualization.git",
+  "author": "andre faria <fariaoandre@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "typescript": "^5.7.2"
+  }
+}
