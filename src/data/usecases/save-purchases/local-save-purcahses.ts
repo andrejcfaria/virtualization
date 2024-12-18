@@ -9,10 +9,10 @@ import { SavePurchases, SavePurchasesParams } from "@/domain/usecases/";
 
   async save (purchases: Array<SavePurchasesParams>):Promise<void> {
     this.timeStamp = this.timeStamp
-    this.cacheStore.delete("purchases");
-    this.cacheStore.insert("purchases",{
+    this.cacheStore.replace('purchases', {
       timeStamp: this.timeStamp,
       value: purchases
     })
+
   }
  }
