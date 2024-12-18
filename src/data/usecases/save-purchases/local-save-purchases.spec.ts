@@ -1,7 +1,5 @@
-import { Insert } from './../../../../node_modules/@sinclair/typebox/value/delta.d';
-import { CacheStore } from "@/data/protocols/cache";
-import { LocalSavePurchases } from "./local-save-purcahses";
-import {  SavePurchasesParams } from "@/domain/usecases/save-purchases";
+import { mockPurchases , CacheStoreSpy} from "@/data/tests";
+import { LocalSavePurchases } from "@/data/usecases"
 
 
 describe('LocalSave', () => {
@@ -64,34 +62,7 @@ const {sut, cacheStore} = makeSut()
  })
 
 
-  class CacheStoreSpy implements CacheStore {
-  deleteCallsCount = 0
-  insertCallsCount = 0
-  deleteKey:string = ""
-  insertKey:string = ""
-  InsertValues : Array<SavePurchasesParams> = []
-
-  delete (key:string) :void {
-    this.deleteCallsCount++
-    this.deleteKey = key;
-  }
-
-
-  insert (key:string, value: any) : void {
-    this.insertCallsCount++
-    this.insertKey = key
-    this.InsertValues = value;
-}
-
-
-simulateDeleteError () : void {
-     jest.spyOn(CacheStoreSpy.prototype, 'delete').mockImplementationOnce(() => {throw new Error()})
-}
-
-simulateInsertError () : void
- {
-  jest.spyOn(CacheStoreSpy.prototype, 'insert').mockImplementationOnce(()=>{throw new Error()})
- }  }
+  
 
 type SutTypes = {
   sut : LocalSavePurchases,
@@ -106,13 +77,3 @@ type SutTypes = {
   }
  }
 
- const mockPurchases = () : Array<SavePurchasesParams> => [{
-  id: '1',
-  date: new Date(),
-  value: 50
- },
-{
-  id: '2',
-  date: new Date(),
-  value: 510
- }]
