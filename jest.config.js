@@ -1,12 +1,10 @@
-const { pathsToModuleNameMapper } = require("ts-jest");
-
 module.exports = {
   roots: ["<rootDir>/src"],
-  testEnviroment :' node',
+  testEnvironment: "node",
   transform: {
-    '.+\\.ts$' : 'ts-jest'
+    "^.+\\.ts$": "ts-jest",
   },
-  pathsToModuleNameMapper: {
-    '@/{.*}': '<rootDir>/src/$1'
-  }
-}
+  moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
+  },
+};
