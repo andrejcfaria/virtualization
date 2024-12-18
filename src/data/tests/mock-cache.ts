@@ -4,28 +4,28 @@ import { SavePurchasesParams } from "@/domain/usecases"
 
 
 export class CacheStoreSpy implements CacheStore {
-  messages: Array<CacheStoreMessage> = []
+  actions: Array<CacheStoreAction> = []
   deleteKey:string = ""
   insertKey:string = ""
   insertValues : Array<SavePurchasesParams> = []
 
   delete (key:string) :void {
     this.deleteKey = key;
-    this.messages.push(CacheStoreMessage.delete)
+    this.actions.push(CacheStoreAction.delete)
   }
 
 
   insert (key:string, value: any) : void {
     this.insertKey = key
     this.insertValues = value;
-    this.messages.push(CacheStoreMessage.insert)
+    this.actions.push(CacheStoreAction.insert)
 
 }
 
 
 simulateDeleteError () : void {
      jest.spyOn(CacheStoreSpy.prototype, 'delete').mockImplementationOnce(() => {
-    this.messages.push(CacheStoreMessage.delete)  
+    this.actions.push(CacheStoreAction.delete)  
       throw new Error()
     })
 }
@@ -33,13 +33,13 @@ simulateDeleteError () : void {
 simulateInsertError () : void
  {
   jest.spyOn(CacheStoreSpy.prototype, 'insert').mockImplementationOnce(()=>{
-    this.messages.push(CacheStoreMessage.insert)  
+    this.actions.push(CacheStoreAction.insert)  
         throw new Error()})
  }  
 
 }
 
-export enum CacheStoreMessage {
+export enum CacheStoreAction {
   delete,
   insert
 }
